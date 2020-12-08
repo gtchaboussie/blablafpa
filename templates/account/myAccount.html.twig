@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="row align-item-center mb-5">
+			<div class="col-3 text-center">
+				<img src="{{app.user.studentPicture}}" class="avatar mb-3" alt="Avatar de {{app.user.fullname}}">
+			</div>
+			<div class="col-9">
+				<h1>{{app.user.fullname}}</h1>
+			</div>
+			<div>
+				<h2>Ma description</h2>
+			</div>
+		</div>
+
+		{{app.user.studentDescription}}
+
+		<hr>
+		<div class="row">
+			<div class="col">
+				<div class="alert alert-success">
+					<h2 class="alert-heading my-3">
+						<i class="fas fa-arrow-left"></i>
+						Les réservations passées</h2>
+
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Lieu de départ</th>
+								<th>Lieu d'arrivé</th>
+								<th>Date de départ</th>
+								<th>Nombre de passagers</th>
+								<th>Conducteur</th>
+							</tr>
+						</thead>
+
+                        {# Mettre la contrainte que la date est dépassé #}
+
+						<tbody>
+							{% for booking in user.bookings %}
+								{% set book = booking.lift %}
+								<tr>
+									<td>{{book.liftCityStart}}</td>
+									<td>{{book.liftCityGoal}}</td>
+									{# <td>{{book.liftDate}}</td> #}
+                                    <td>a revoir</td>
+									<td>{{book.liftSeats}}</td>
+									<td>
+										<img src="{{app.user.StudentPicture}}" alt="" class="avatar avatar-micro"> 
+
+                                        {# FAIRE LE LIEN AVEC LA PHOTO ET LE NOM DU CHAUFFEUR #}
+
+										{{app.user.fullname}}
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+			<div class="col">
+				<div class="alert alert-danger">
+					<h2 class="alert-heading my-3">
+						<i class="fas fa-arrow-right"></i>
+						Les réservations futures</h2>
+
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Lieu de départ</th>
+								<th>Lieu d'arrivé</th>
+								<th>Date de départ</th>
+								<th>Nombre de passagers</th>
+								<th>Conducteur</th>
+							</tr>
+
+                            {# Mettre la contrainte que la date est à venir #}
+						</thead>
+						{# <tbody>
+																												                            {% for ad in worstAds %}
+																												                            <tr>
+																												                                <td>{{?????"Lieu de départ"?????}}</td>
+																												                                <td>{{????"Lieu d\'arrivé"??????}}</td>
+																												                                <td>{{????"Date de départ"??????}}</td>
+																												                                <td>{{?????"Nombre de passagers"?????}}</td>
+																												                                <td>
+																												                                    <img src="{{ad.picture}}" alt="" class="avatar avatar-micro"> {{????"prénom"????}} {{????"nom"?????}}
+																												                                </td>
+																												                            </tr>
+																												                            {% endfor %}
+																												                        </tbody> #}
+					</table>
+				</div>
+			</div>
+
+
+
+            {# TEST DE VAL: AFFICHAGE DES ANNONCES CREER PAR L'UTILISATEUR #}
+
+			<h2>Les annonces de
+				{{user.fullname}}
+			</h2>
+		</div>
+		{% if user.bookings | length >0 %}
+			<div class="row">
+				{% for booking in user.bookings %}
+					{# {% include "ad/_ad.html.twig" %}     IL FAUT CREER CETTE PAGE ET SON NOM DE ROUTE #}
+					
+				{% endfor %}
+			</div>
+		{% else %}
+			<div class="alert alert-warning ">
+				<p>
+					<strong>{{user.fullname}}</strong>
+					n'a pas encore d'annonce sur le site !
+				</p>
+			</div>
+		{% endif %}
+
+	</div>
+</div>{% endblock %}

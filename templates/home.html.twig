@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Bienvenue sur Blablafpa !
+{% endblock %}
+
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron mt-3">
+            <hr class="my-5">
+            <h1 class="display-3 text-center"><strong>Bienvenue sur Blablafpa !</strong></h1>
+            <hr class="my-4">
+                <p class="lead text-center">Nous mettons en relations les stagiaires voyageurs et les stagiaires 
+                chauffeurs qui veulent proposer l'opportunités de voyager gratuitement en proposant leurs trajets !</p>
+            <hr class="my-5">
+            <div class="container">
+                <div class="row searchLift">
+                    <div class="col">
+                        <label for="city-select" class="btn2" >Départ:</label>
+                        <select name="Départ" id="city-select">
+                            <option value="">--Ville de départ--</option>
+                            <option value="Paris">Paris</option>
+                            <option value="Marseille">Marseille</option>
+                            <option value="Dreux">Dreux</option>
+                            <option value="Chartres">Chartes</option>
+                            <option value="Nantes">Nantes</option>
+                            <option value="Rennes">Rennes</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="city-select" class="btn2">Destination:</label>
+                        <select name="Destination" id="city-select">
+                            <option value="">--Ville de destination--</option>
+                            <option value="Paris">Paris</option>
+                            <option value="Marseille">Marseille</option>
+                            <option value="Dreux">Dreux</option>
+                            <option value="Chartres">Chartes</option>
+                            <option value="Nantes">Nantes</option>
+                            <option value="Rennes">Rennes</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="start"class="btn2">Date:</label>
+                        <input type="date" id="start" name="trip-start"
+                            value=""
+                            min="2020-12-02" max="2021-12-31">
+                    </div>
+                    <div class="col">
+                        <label for="appt"class="btn2"> Heure de départ:</label>
+                        <input type="time" id="appt" name="appt"
+                        min="" max="" required>
+                    </div>
+                    <div class="col">
+                        <label for="appt"class="btn2">Nb de places</label>
+                        <input type="number" id="appt" name="appt"
+                        min="1" max="6" required>
+                    </div>                   
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+                <p class="lead">
+                    <div class="dropdown-menu dropdown-menu" aria-labelledby="accountDropdownLink">
+                        <a href="#" class="dropdown-item"> Créer une annonce</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">Mon compte</a>
+                        <a href="#" class="dropdown-item">Modifier 
+                        mon profil</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">Déconnexion</a>
+                    </div>
+                    <div class="class-container">
+                        <button type="submit" class="btn btn-secondary"><a href="{{path('lift_create')}}"> Proposer un trajet</button></a>
+                    </div>
+                </p>
+            </div>
+            <div class="row">
+                    <div class="col-md-4">
+                            <div class="card.bg-light mb-3">
+                                <div class="card-header text-center">
+                                    <h4 class="card-title">
+                                        <strong>Facile!</strong>
+                                    </h4>
+                        </div>
+                    <div class="card-body">                        
+                        <p class="card-text">
+                            Trouvez rapidement un covoiturage à proximité parmi les trajets proposés.
+                        </p>
+                    </div>
+                </div>
+            </div>
+                    <div class="col-md-4">
+                            <div class="card.bg-light mb-3">
+                                    <div class="card-header text-center">
+                                        <h4 class="card-title">
+                                            <strong>Pratique!</strong>
+                                        </h4>
+                                    </div>
+                        <div class="card-body">                        
+                            <p class="card-text">
+                                Trouvez le trajet parfait ! Il vous suffit d’entrer votre adresse exacte, de choisir le covoiturage qui vous convient le mieux, et de réserver.
+                            </p>
+                        </div>
+                    </div>
+                    
+            </div>
+            <div class="col-md-4">
+                            <div class="card.bg-light mb-3">
+                                    <div class="card-header text-center">
+                                        <h4 class="card-title">
+                                            <strong>Direct!</strong>
+                                        </h4>
+                                    </div>
+                        <div class="card-body">                        
+                            <p class="card-text">
+                                Que vous prévoyiez à l’avance ou réserviez en dernière minute, vous trouverez toujours un covoiturage.
+                            </p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

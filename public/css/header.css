@@ -1,0 +1,14 @@
+/* NAVBAR all */
+.btn {
+    background: #229300;
+    display: block;
+    margin: auto;
+}
+
+.navbar {
+    font-size:  25px;
+    color: black;
+}
+.nav {
+    font-size: 25px;
+}

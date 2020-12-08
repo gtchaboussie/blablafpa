@@ -1,0 +1,3 @@
+parameters:
+    locale: fr
+    images_directory: '%kernel.root_dir%/../web/uploads/images' #(src: https://maryamdev.blogspot.com/2017/10/tuto-symfony-3-upload-dune-image-en.html)

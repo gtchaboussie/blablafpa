@@ -1,0 +1,101 @@
+
+/*=================*/
+/* ==== GENERAL====*/
+/*=================*/
+
+/** 
+Police principale
+**/
+*{
+    font-family: 'Roboto', sans-serif;
+}
+
+/*================*/
+/* ==== HEADER====*/
+/*================*/
+
+/**
+Police header
+**/
+.navbar{
+
+    font-size: 25px;
+}
+
+/**
+Bouton général
+**/
+.btn{
+    background-color: #229300;
+    display: block;
+    margin: auto;
+}
+
+/**
+Bouton  navigation
+**/
+.nav{
+    font-size: 25px;
+}
+
+.avatar {
+    max-width: 128px;
+    max-height: 128px;
+    border-radius: 50%;
+}
+
+.avatar-mini{
+
+    max-width: 80px;
+    max-height: 80px;
+
+}
+
+.bi
+{
+    display: flex;
+    text-align: left;
+}
+
+
+/*=========================*/
+/* ==== HOME.HTML.TWIG ====*/
+/*=========================*/
+
+/**
+Police barre de recherche
+**/
+.btn2{
+    color: white;
+    text-shadow: 3px 3px 3px black;
+}
+
+/**
+Image principale
+**/
+.jumbotron.mt-3{
+    background-image: url(/image/road.jpg);
+    background-size: cover;
+}
+/**
+Texte container
+**/
+.display-3.text-center {
+    color: white;
+}
+/**
+Police jumbotron
+**/
+.lead{
+    color: white;
+    text-shadow: 3px 3px 3px black;
+    font-family: 'Roboto', sans-serif;
+}
+
+.card-title{
+    color: white;
+    border-radius: 50%;
+    background-color: #229300;
+    text-shadow: 3px 3px 3px black;
+    
+}

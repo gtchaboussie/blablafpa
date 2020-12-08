@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proposer une annonce{% endblock %}
+
+{% block body %}
+<div class="class-container">
+    <form>
+        <div class="container text-center col-6 mt-4 pt-1 pb-4 searchList">
+            <h1 class="text-center my-5">Proposer une annonce</h1>
+            
+            <div class="form-group row">
+                <label for="cityStart" class="col-4 col-form-label">Ville de départ</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control col-11" id="cityStart">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="cityGoal" class="col-4 col-form-label">Ville d'arrivée</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control col-11" id="cityGoal">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="dateStart" class="col-4 col-form-label">Date de départ</label>
+                <div class="col-sm-8">
+                    <input type="date" class="form-control col-11" id="dateStart">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="hourStart" class="col-4 col-form-label">Heure de départ</label>
+                <div class="col-sm-8">
+                    <input type="time" class="form-control col-11" id="hourStart">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="seats" class="col-4 col-form-label">Nombre de places</label>
+                <div class="col-sm-8">
+                    <input type="number" class="form-control col-11" id="start" min="1" max="6" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="description" class="col-4 col-form-label">Description</label>
+                <div class="col-sm-8">
+                    <input type="textarea" class="form-control col-11" id="description">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-success mr-5">Confirmer</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

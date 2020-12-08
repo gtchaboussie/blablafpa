@@ -1,0 +1,22 @@
+{
+  "name": "blablafpa",
+  "version": "1.0.0",
+  "description": "effectuer un \r ````\r composer update\r ````\r Afin d'installer les dependances.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gtchaboussie/blablafpa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gtchaboussie/blablafpa/issues"
+  },
+  "homepage": "https://github.com/gtchaboussie/blablafpa#readme"
+}
