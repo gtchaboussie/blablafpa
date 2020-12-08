@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -22,12 +24,10 @@ class AccountController extends AbstractController
 {
     /**
      * Permet d'afficher et de gérer le formulaire de connexion
-     * 
      * @Route("/login", name="account_login")
      * @return Response
      */
-    public function login(AuthenticationUtils $utils)
-    {
+    public function login(AuthenticationUtils $utils){
         $error = $utils->getLastAuthenticationError();
         $username = $utils->getLastUsername();
 
@@ -39,25 +39,19 @@ class AccountController extends AbstractController
 
     /**
      * Permet de se déconnecter
-     * 
      * @Route("/logout", name="account_logout")
-     *
      * @return void
      */
-    public function logout()
-    {
+    public function logout(){
         // .. rien !
     }
 
     /**
      * Permet d'afficher le formulaire d'inscription
-     * 
      * @Route("/register", name="account_register")
-     *
      * @return Response
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
-    {
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
         $user = new Student();
 
         $form = $this->createForm(RegisterType::class, $user);
@@ -68,26 +62,11 @@ class AccountController extends AbstractController
 
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
-            // $user = new User();
 
             $form = $this->createForm(RegisterType::class);
 
             $form->handleRequest($request);
 
-            // if($form->isSubmitted() && $form->isValid()) {
-            //     $hash = $encoder->encodePassword($user, $user->getHash());
-            //     $user->setHash($hash);
-
-            //     $manager->persist($user);
-            //     $manager->flush();
-
-            //     $this->addFlash(
-            //         'success',
-            //         "Votre compte a bien été crée ! Vous pouvez maintenant vous connecter !"
-            //     );
-
-            //     return $this->redirectToRoute('account_login');
-            // }
         }
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
@@ -96,14 +75,11 @@ class AccountController extends AbstractController
 
     /**
      * Permet d'afficher et de traiter le formulaire de modification de profil
-     *
      * @Route("/account/profile", name="account_profile")
      * @IsGranted("ROLE_USER")
-     * 
      * @return void
      */
-    public function profile(Request $request, EntityManagerInterface $manager)
-    {
+    public function profile(Request $request, EntityManagerInterface $manager){
         $user = $this->getUser();
 
         $form = $this->createForm(AccountType::class, $user);
@@ -127,10 +103,8 @@ class AccountController extends AbstractController
 
     /**
      * Permet de modifier le mot de passe
-     *
      * @Route("/account/password-update", name="account_password")
      * @IsGranted("ROLE_USER")
-     * 
      * @return Response
      */
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager) {
@@ -173,10 +147,8 @@ class AccountController extends AbstractController
 
     /**
      * Permet d'afficher le profil de l'utilisateur connecté
-     *
      * @Route("/account", name="account_my_account")
      * @IsGranted("ROLE_USER")
-     * 
      * @return Response
      */
     public function myAccount()
@@ -186,34 +158,4 @@ class AccountController extends AbstractController
         ]);
     }
 
-    /**
-     * Permet d'afficher la liste des réservations faites par l'utilisateur
-     *
-     * @Route("/account/bookings", name="account_bookings")
-     * 
-     * @return Response
-     */
-    public function bookings()
-    {
-        return $this->render('booking/show_booking.html.twig');
-    }
-
-    /**
-     * Permet de créer une annonce
-     *
-     * @Route("/ad/createLift", name="lift_create")
-     * 
-     * @return Response
-     */
-    public function create(Request $request, EntityManagerInterface $manager)
-    {
-
-        $form = $this->createForm(BookingType::class);
-
-        $form->handleRequest($request);
-
-        return $this->render('ad/lift_create.html.twig', [
-            'form' => $form->createView()
-        ]);
-    }
 }
