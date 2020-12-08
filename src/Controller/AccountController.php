@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -63,9 +62,7 @@ class AccountController extends AbstractController
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
 
-            $form = $this->createForm(RegisterType::class);
-
-            $form->handleRequest($request);
+            $manager->persist($user);
 
         }
         return $this->render('account/register.html.twig', [
@@ -76,7 +73,7 @@ class AccountController extends AbstractController
     /**
      * Permet d'afficher et de traiter le formulaire de modification de profil
      * @Route("/account/profile", name="account_profile")
-     * @IsGranted("ROLE_USER")
+     * @Security("is_granted('ROLE_USER')")
      * @return void
      */
     public function profile(Request $request, EntityManagerInterface $manager){
@@ -104,7 +101,7 @@ class AccountController extends AbstractController
     /**
      * Permet de modifier le mot de passe
      * @Route("/account/password-update", name="account_password")
-     * @IsGranted("ROLE_USER")
+     * @Security("is_granted('ROLE_USER')")
      * @return Response
      */
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager) {
@@ -148,11 +145,10 @@ class AccountController extends AbstractController
     /**
      * Permet d'afficher le profil de l'utilisateur connecté
      * @Route("/account", name="account_my_account")
-     * @IsGranted("ROLE_USER")
+     * @Security("is_granted('ROLE_USER')")
      * @return Response
      */
-    public function myAccount()
-    {
+    public function myAccount(){
         return $this->render('account/myAccount.html.twig', [
             'user' => $this->getUser()
         ]);

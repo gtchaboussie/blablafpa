@@ -8,8 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class PictureUploadListener
-{
+class PictureUploadListener{
 
     private $uploader;
 
