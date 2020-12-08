@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Student;
 use App\Form\AccountType;
-use App\Form\BookingType;
+use App\Form\RegisterType;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
 use Symfony\Component\Form\FormError;
@@ -12,12 +12,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\RegisterType;
 
 class AccountController extends AbstractController
 {
@@ -45,27 +45,69 @@ class AccountController extends AbstractController
         // .. rien !
     }
 
-    /**
-     * Permet d'afficher le formulaire d'inscription
+ /**
+     * Permet d'afficher et gérer le formulaire d'inscription
      * @Route("/register", name="account_register")
      * @return Response
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
-        $user = new Student();
+    public function register(
+                            Request $request, EntityManagerInterface $manager,
+                            UserPasswordEncoderInterface $encoder,
+                            SluggerInterface $slugger) {
+                                
+        $student = new Student();
 
-        $form = $this->createForm(RegisterType::class, $user);
-
+        $form = $this->createForm(RegisterType::class, $student);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted() && $form->isValid()) {
+            $password = $encoder->encodePassword($student, $student->getPassword());
+            $student->setPassword($password);
 
-            $hash = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hash);
+            //===========================================================
+            //  IMAGE PART
+            //===========================================================
 
-            $manager->persist($user);
+            /** @var UploadedFile $studentPictureFile */
+            $studentPictureFile = $form->get('studentPicture')->getData();
 
+            //Condition necessaire car le champ n'est pas requis.
+            if ($studentPictureFile) {
+                $originalFilename = pathinfo($studentPictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                // Creation d'un slug afin de sécuriser l'accès à l'image par la suite.
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$studentPictureFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $studentPictureFile->move(
+                        $this->getParameter('student_pictures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $student->setStudentPicture($newFilename);
+            }
+
+            //===========================================================
+            // EO IMAGE PART
+            //===========================================================
+
+            $manager->persist($student);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !"
+            );
+
+            return $this->redirectToRoute('account_login');
         }
-        
+
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
         ]);
@@ -85,6 +127,7 @@ class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $manager->persist($user);
             $manager->flush();
 
