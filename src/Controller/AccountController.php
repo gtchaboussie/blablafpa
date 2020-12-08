@@ -65,6 +65,7 @@ class AccountController extends AbstractController
             $manager->persist($user);
 
         }
+        
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
         ]);

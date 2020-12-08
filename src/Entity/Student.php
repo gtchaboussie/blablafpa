@@ -50,7 +50,6 @@ class Student implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Télécharger une image au format jpg, jpeg ou png...")
      * @Assert\File(mimeTypes={"image/jpeg", "image/jpg", "image/png"})
      */
     private $studentPicture;

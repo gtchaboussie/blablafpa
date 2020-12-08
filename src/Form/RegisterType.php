@@ -30,7 +30,7 @@ class RegisterType extends ApplicationType
             ->add('studentPhone', TextType::class, $this->getConfiguration('Téléphone', "Votre numéro de téléphone"))
             ->add('password', PasswordType::class, $this->getConfiguration("Mot de passe", "Votre mot de passe..."))
             ->add('confirmPassword', PasswordType::class, $this->getConfiguration("Confirmation du mot de passe", "Confirmer le mot de passe..."))
-            ->add('studentPicture', FileType::class, array('label' => 'Photo de profil'))
+            ->add('studentPicture', FileType::class, array('label' => 'Photo de profil', "required" => false))
             ->add('studentDescription', TextareaType::class, $this->getConfiguration("Description", "Présentez vous en quelques mots..."))
             ->add(
                 'StudentStartDate', 
