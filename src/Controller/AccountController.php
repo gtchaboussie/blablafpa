@@ -74,7 +74,7 @@ class AccountController extends AbstractController
      * Permet d'afficher et de traiter le formulaire de modification de profil
      * @Route("/account/profile", name="account_profile")
      * @Security("is_granted('ROLE_USER')")
-     * @return void
+     * @return Response
      */
     public function profile(Request $request, EntityManagerInterface $manager){
         $user = $this->getUser();
@@ -140,7 +140,6 @@ class AccountController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-
 
     /**
      * Permet d'afficher le profil de l'utilisateur connecté
