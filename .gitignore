@@ -20,3 +20,6 @@
 /todo
 
 /public/uploads/
+
+/src/Controller/TestController.php
+/templates/test

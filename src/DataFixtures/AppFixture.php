@@ -12,6 +12,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Repository\GivenStudentsIdRepository;
 use App\Repository\LiftRepository;
 use App\Repository\StudentRepository;
+use App\Service\RandomCityGenerator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -26,7 +27,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * 
  * @author MrPlop
  */
-class AfpaIdFixture extends Fixture
+class AppFixture extends Fixture
 {
     /**
      * Constructeur, necessaire à l'injection de dépendance pour la
@@ -36,12 +37,14 @@ class AfpaIdFixture extends Fixture
         UserPasswordEncoderInterface $encoder,
         GivenStudentsIdRepository $givenStudentsIdRepo,
         StudentRepository $studentRepo,
-        LiftRepository $liftRepo
+        LiftRepository $liftRepo,
+        RandomCityGenerator $rcg
     ) {
         $this->encoder = $encoder;
         $this->givenStudentsIdRepo = $givenStudentsIdRepo;
         $this->studentRepo = $studentRepo;
         $this->liftRepo = $liftRepo;
+        $this->rcg = $rcg;
     }
 
     public function load(ObjectManager $manager)
@@ -131,8 +134,8 @@ class AfpaIdFixture extends Fixture
                 $lift = new Lift();
 
                 $lift
-                    ->setLiftCityStart($faker->word())
-                    ->setLiftCityGoal($faker->word())
+                    ->setLiftCityStart($this->rcg->getRandomCity())
+                    ->setLiftCityGoal($this->rcg->getRandomCity())
                     ->setLiftDate(
                         $faker->dateTimeBetween('-2 weeks', '+3 weeks')
                     )
