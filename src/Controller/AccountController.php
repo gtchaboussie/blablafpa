@@ -7,15 +7,15 @@ use App\Form\AccountType;
 use App\Form\RegisterType;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
+use App\Service\FileUploader;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -53,7 +53,7 @@ class AccountController extends AbstractController
     public function register(
                             Request $request, EntityManagerInterface $manager,
                             UserPasswordEncoderInterface $encoder,
-                            SluggerInterface $slugger) {
+                            FileUploader $fu) {
                                 
         $student = new Student();
 
@@ -64,38 +64,14 @@ class AccountController extends AbstractController
             $password = $encoder->encodePassword($student, $student->getPassword());
             $student->setPassword($password);
 
-            //===========================================================
-            //  IMAGE PART
-            //===========================================================
-
+            // PARTIE IMAGE
             /** @var UploadedFile $studentPictureFile */
             $studentPictureFile = $form->get('studentPicture')->getData();
-
             //Condition necessaire car le champ n'est pas requis.
             if ($studentPictureFile) {
-                $originalFilename = pathinfo($studentPictureFile->getClientOriginalName(), PATHINFO_FILENAME);
-
-                // Creation d'un slug afin de sécuriser l'accès à l'image par la suite.
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$studentPictureFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $studentPictureFile->move(
-                        $this->getParameter('student_pictures_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                }
-
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
-                $student->setStudentPicture($newFilename);
+                $pictureName = $fu->upload($studentPictureFile);
+                $student->setStudentPicture( $pictureName );
             }
-
-            //===========================================================
-            // EO IMAGE PART
-            //===========================================================
 
             $manager->persist($student);
             $manager->flush();
