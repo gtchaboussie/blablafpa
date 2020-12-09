@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    student_pictures_directory: '%kernel.project_dir%/public/uploads/student_pictures'
 
 services:
     # default configuration for services in *this* file
@@ -30,14 +31,9 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    blablafpa.picture_uploader:
-        class: Services\PictureUpload
-        arguments: ['%images_directory%']
-    # Enregistrement du service pour le téléchargement de photo (avatar profil: https://maryamdev.blogspot.com/2017/10/tuto-symfony-3-upload-dune-image-en.html)
 
-    blablafpa.doctrine_picture_listener:
-        class: Listener\PictureListener\PictureUploadListener
-        arguments: ['@blablafpa.picture_uploader']
-        tags:
-            - { name: doctrine.picture_listener, event: prePersist }
-            - { name: doctrine.picture_listener, event: preUpdate }
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%student_pictures_directory%'
+            $pathToAdd: '/uploads/student_pictures/'
+            

@@ -4,21 +4,20 @@ namespace App\Controller;
 
 use App\Entity\Student;
 use App\Form\AccountType;
-use App\Form\BookingType;
+use App\Form\RegisterType;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
+use App\Service\FileUploader;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\RegisterType;
 
 class AccountController extends AbstractController
 {
@@ -46,28 +45,45 @@ class AccountController extends AbstractController
         // .. rien !
     }
 
-    /**
-     * Permet d'afficher le formulaire d'inscription
+ /**
+     * Permet d'afficher et gérer le formulaire d'inscription
      * @Route("/register", name="account_register")
      * @return Response
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
-        $user = new Student();
+    public function register(
+                            Request $request, EntityManagerInterface $manager,
+                            UserPasswordEncoderInterface $encoder,
+                            FileUploader $fu) {
+                                
+        $student = new Student();
 
-        $form = $this->createForm(RegisterType::class, $user);
-
+        $form = $this->createForm(RegisterType::class, $student);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if($form->isSubmitted() && $form->isValid()) {
+            $password = $encoder->encodePassword($student, $student->getPassword());
+            $student->setPassword($password);
 
-            $hash = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hash);
+            // PARTIE IMAGE
+            /** @var UploadedFile $studentPictureFile */
+            $studentPictureFile = $form->get('studentPicture')->getData();
+            //Condition necessaire car le champ n'est pas requis.
+            if ($studentPictureFile) {
+                $pictureName = $fu->upload($studentPictureFile);
+                $student->setStudentPicture( $pictureName );
+            }
 
-            $form = $this->createForm(RegisterType::class);
+            $manager->persist($student);
+            $manager->flush();
 
-            $form->handleRequest($request);
+            $this->addFlash(
+                'success',
+                "Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !"
+            );
 
+            return $this->redirectToRoute('account_login');
         }
+
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
         ]);
@@ -76,8 +92,8 @@ class AccountController extends AbstractController
     /**
      * Permet d'afficher et de traiter le formulaire de modification de profil
      * @Route("/account/profile", name="account_profile")
-     * @IsGranted("ROLE_USER")
-     * @return void
+     * @Security("is_granted('ROLE_USER')")
+     * @return Response
      */
     public function profile(Request $request, EntityManagerInterface $manager){
         $user = $this->getUser();
@@ -87,6 +103,7 @@ class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $manager->persist($user);
             $manager->flush();
 
@@ -104,7 +121,7 @@ class AccountController extends AbstractController
     /**
      * Permet de modifier le mot de passe
      * @Route("/account/password-update", name="account_password")
-     * @IsGranted("ROLE_USER")
+     * @Security("is_granted('ROLE_USER')")
      * @return Response
      */
     public function updatePassword(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager) {
@@ -144,15 +161,13 @@ class AccountController extends AbstractController
         ]);
     }
 
-
     /**
      * Permet d'afficher le profil de l'utilisateur connecté
      * @Route("/account", name="account_my_account")
-     * @IsGranted("ROLE_USER")
+     * @Security("is_granted('ROLE_USER')")
      * @return Response
      */
-    public function myAccount()
-    {
+    public function myAccount(){
         return $this->render('account/myAccount.html.twig', [
             'user' => $this->getUser()
         ]);

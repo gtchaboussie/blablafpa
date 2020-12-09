@@ -10,9 +10,9 @@ class HomeController extends AbstractController{
     /**
      * Permet d'afficher la page d'acceuil
      * @Route("/", name="homepage")
+     * @return Response
      */
-    public function home()
-    {
+    public function home(){
         return $this->render('home.html.twig');
     }
 }
