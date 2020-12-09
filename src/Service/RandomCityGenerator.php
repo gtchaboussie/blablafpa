@@ -31,7 +31,7 @@ class RandomCityGenerator{
     public function getRandomCity(  ){
         $faker = Factory::create('fr_FR');
         $response = null;
-        
+
         while(!$response){
             $randomCode = $faker->randomNumber(4, true) * 10;
             $response = $this->client->request(
